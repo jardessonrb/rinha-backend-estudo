@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Pessoa implements Serializable {
 
@@ -33,4 +39,7 @@ public class Pessoa implements Serializable {
     @CollectionTable(name = "pessoa_stack", joinColumns = @JoinColumn(name = "pessoa_id"))
     @Column(name = "stack")
     private List<String> stack =  new ArrayList<>();
+
+    @Column(nullable = false)
+    private String termoBusca;
 }

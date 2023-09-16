@@ -4,9 +4,11 @@ import com.labjs.rinha23.application.dto.PessoaDto;
 import com.labjs.rinha23.application.forms.PessoaForm;
 import com.labjs.rinha23.core.service.PessoaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -21,11 +23,17 @@ public class PessoaController {
 
     @PostMapping("/pessoas")
     public ResponseEntity<PessoaDto> createPessoa(@RequestBody @Validated PessoaForm pessoaForm, UriComponentsBuilder uriComponentsBuilder){
-        PessoaDto pessoaDto = pessoaService.create(pessoaForm);
+        try {
+            PessoaDto pessoaDto = pessoaService.create(pessoaForm);
 
-        URI uri =uriComponentsBuilder.path("/pessoas/{id}").buildAndExpand(pessoaDto.getId()).toUri();
+            URI uri =uriComponentsBuilder.path("/pessoas/{id}").buildAndExpand(pessoaDto.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(pessoaDto);
+            return ResponseEntity.created(uri).body(pessoaDto);
+        } catch (IllegalArgumentException exception){
+            return ResponseEntity.badRequest().build();
+        }catch (Exception exception){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
     }
 
     @GetMapping("/pessoas")
@@ -35,7 +43,13 @@ public class PessoaController {
 
     @GetMapping("/pessoas/{id}")
     public ResponseEntity<PessoaDto> findPessoas(@PathVariable(name = "id") UUID id){
-        return ResponseEntity.ok(pessoaService.findByIdPessoa(id));
+        PessoaDto pessoaDto = pessoaService.findByIdPessoa(id);
+
+        if(pessoaDto == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return ResponseEntity.ok(pessoaDto);
     }
 
     @GetMapping("/contagem-pessoas")
