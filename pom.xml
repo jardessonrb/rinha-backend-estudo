@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.labjs</groupId>
 	<artifactId>rinha23</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>rinha23</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -54,6 +54,10 @@
 
 	<build>
 		<plugins>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-jar-plugin</artifactId>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
